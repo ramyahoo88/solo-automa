@@ -6,6 +6,8 @@ Solo Table hosts browser companions for physical board games. The first companio
 
 Open the [Solo Table catalog](https://ramyahoo88.github.io/solo-automa/) and choose **Play in browser**. For offline play, choose **Download ZIP**, extract the standalone HTML file, and open it in your browser.
 
+The Colonial Twilight companion’s **Saved games** controls move a game between browsers or between the hosted and offline copies. [Colonial Twilight source and build instructions](source/colonial-twilight/README.md)
+
 ## Add a companion
 
 1. Put the app at `games/<slug>/index.html` and keep any app assets within that game’s folder. Use relative paths.

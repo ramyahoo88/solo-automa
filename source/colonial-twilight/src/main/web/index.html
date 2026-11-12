@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#27352d">
+  <meta name="description" content="Run the Colonial Twilight FLN bot in your browser alongside the physical board and deck.">
+  <title>Colonial Twilight · FLN solo companion</title>
+  <style>
+<!-- COMPANION_STYLE -->
+  </style>
+</head>
+<body>
+  <header class="masthead">
+    <div class="frame masthead-inner">
+      <div class="identity">
+        <div class="emblem" aria-hidden="true">FLN</div>
+        <div>
+          <h1>Colonial Twilight</h1>
+          <p>FLN solo companion</p>
+        </div>
+      </div>
+      <button id="new-game" class="button header-button" type="button" hidden>New game</button>
+    </div>
+  </header>
+  <main class="frame main">
+    <div id="error" class="notice error" role="alert" hidden>
+      <p id="error-message"></p>
+      <button id="retry" class="button secondary" type="button" hidden>Reload companion</button>
+    </div>
+    <details id="save-tools" class="save-tools">
+      <summary>Saved games</summary>
+      <div class="save-actions">
+        <button id="import-save" class="button secondary" type="button">Import save</button>
+        <button id="export-save" class="button secondary" type="button" hidden>Export save</button>
+        <button id="download-recovery" class="button secondary" type="button" hidden>Download recovery copy</button>
+      </div>
+      <input id="save-file" type="file" accept=".json,application/json" hidden>
+      <p id="save-message" class="field-help" role="status" hidden></p>
+    </details>
+    <section id="setup" class="setup panel" aria-labelledby="setup-title">
+      <div class="setup-intro">
+        <h2 id="setup-title">Play solo with your board</h2>
+        <p>Play the Government on your tabletop. Enter each card as you draw it, then follow the FLN bot’s moves in the turn log.</p>
+      </div>
+      <form id="setup-form">
+        <fieldset>
+          <legend>Choose your scenario</legend>
+          <div class="scenarios">
+            <label class="scenario">
+              <input type="radio" name="scenario" value="Short" checked>
+              <span><strong>Short</strong><small>1960–1962 · 3 Propaganda cards</small></span>
+            </label>
+            <label class="scenario">
+              <input type="radio" name="scenario" value="Medium">
+              <span><strong>Medium</strong><small>1957–1962 · 4 Propaganda cards</small></span>
+            </label>
+            <label class="scenario">
+              <input type="radio" name="scenario" value="Full">
+              <span><strong>Full</strong><small>1955–1962 · 5 Propaganda cards</small></span>
+            </label>
+          </div>
+        </fieldset>
+        <label class="optional">
+          <input type="checkbox" id="final-support" name="final-support">
+          <span>Include the final Propaganda Support Phase <small>Optional rule 8.5.1</small></span>
+        </label>
+        <div class="setup-actions">
+          <button id="start-game" class="button primary" type="submit">Start game</button>
+          <p>Set up the matching scenario on your board first.</p>
+        </div>
+      </form>
+    </section>
+    <p id="loading" class="notice" role="status" hidden>Opening the FLN companion…</p>
+    <section id="play" aria-label="Current game" hidden>
+      <div class="gamebar">
+        <div>
+          <p id="scenario-name" class="eyebrow"></p>
+          <h2 id="turn-title"></h2>
+          <p id="current-event" class="muted"></p>
+        </div>
+        <p id="save-status" class="save-status" role="status"></p>
+      </div>
+      <div class="scoreboard">
+        <div class="score gov">
+          <span class="side">Government</span>
+          <div><strong id="gov-resources"></strong><span>resources</span></div>
+          <div><strong id="gov-points"></strong><span>support + commitment</span></div>
+        </div>
+        <div class="score fln">
+          <span class="side">FLN</span>
+          <div><strong id="fln-resources"></strong><span>resources</span></div>
+          <div><strong id="fln-points"></strong><span>opposition + bases</span></div>
+        </div>
+        <div class="score campaign">
+          <span class="side">Propaganda</span>
+          <div><strong id="propaganda"></strong><span>cards resolved</span></div>
+        </div>
+      </div>
+      <div class="play-grid">
+        <section class="panel action-panel" aria-labelledby="prompt-title">
+          <div id="action" aria-busy="false">
+            <h2 id="prompt-title" tabindex="-1"></h2>
+            <p id="prompt-detail" class="muted" hidden></p>
+            <div id="controls"></div>
+          </div>
+          <details id="table-tools" hidden>
+            <summary>Table controls</summary>
+            <div id="table-buttons"></div>
+          </details>
+        </section>
+        <section class="panel reference-panel" aria-label="Table reference">
+          <div class="tabs" role="tablist" aria-label="Table reference">
+            <button id="log-tab" class="tab" role="tab" aria-controls="log-pane" aria-selected="true" type="button">Turn log</button>
+            <button id="board-tab" class="tab" role="tab" aria-controls="board-pane" aria-selected="false" tabindex="-1" type="button">Board state</button>
+          </div>
+          <div id="log-pane" class="reference-content" role="tabpanel" aria-labelledby="log-tab">
+            <p id="log-hint" class="muted">Moves and marker changes will appear here.</p>
+            <div id="log" tabindex="0" aria-label="Recent activity"></div>
+          </div>
+          <div id="board-pane" class="reference-content" role="tabpanel" aria-labelledby="board-tab" hidden>
+            <dl class="tracks">
+              <div><dt>Commitment</dt><dd id="track-commitment"></dd></div>
+              <div><dt>France track</dt><dd id="track-france"></dd></div>
+              <div><dt>Border zone</dt><dd id="track-border"></dd></div>
+            </dl>
+            <p id="eligibility" class="muted"></p>
+            <label for="space-select" class="field-label">Inspect a space</label>
+            <select id="space-select"></select>
+            <div id="space-state"></div>
+          </div>
+        </section>
+      </div>
+    </section>
+    <noscript><p class="notice">Enable JavaScript to run the companion.</p></noscript>
+  </main>
+  <footer class="frame footer">
+    <p>Offline tabletop companion. Requires the physical game.</p>
+    <p>Bot software by <a href="https://github.com/sellmerfud/coltwi/tree/v2.16">Curt Sellmer</a>.</p>
+    <details class="license"><summary>MIT license</summary><pre>MIT License
+
+Copyright (c) 2017 Curt Sellmer
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre></details>
+  </footer>
+<script>
+<!-- COMPANION_SCRIPT -->
+</script>
+</body>
+</html>
