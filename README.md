@@ -4,7 +4,7 @@ Solo Table hosts browser companions for physical board games. The first companio
 
 ## Play
 
-Open the [Solo Table catalog](https://ramyahoo88.github.io/solo-automa/) and choose **Play in browser**. Choose **Download HTML** to save a standalone copy.
+Open the [Solo Table catalog](https://ramyahoo88.github.io/solo-automa/) and choose **Play in browser**. For offline play, choose **Download ZIP**, extract the standalone HTML file, and open it in your browser.
 
 ## Add a companion
 
