@@ -1,10 +1,14 @@
 # Solo Table
 
-Solo Table hosts browser companions for physical board games. The first companion runs the FLN bot for *Colonial Twilight*.
+Solo Table hosts browser companions for physical board games, including *A Glorious Chance*, *Colonial Twilight*, *Labyrinth*, *Fire in the Lake*, *Cuba Libre*, *Liberty or Death*, *All Bridges Burning*, *Pendragon*, *Kutná Hora*, and *Dominant Species*.
 
 ## Play
 
-Open the [Solo Table catalog](https://ramyahoo88.github.io/solo-automa/) and choose **Play in browser**. For offline play, choose **Download ZIP**, extract the standalone HTML file, and open it in your browser.
+Open the [Solo Table catalog](https://solo-table.pages.dev/) and choose **Play in browser**. For offline play, choose the companion's download and open its HTML file in your browser. Extract ZIP downloads first.
+
+[A Glorious Chance v0.2.18](https://solo-table.pages.dev/games/a-glorious-chance/) requires the physical game and Event deck. The app runs the opposing squadron in either campaign, and asks for each physical Event card number. [Source, tests and audit evidence](https://github.com/ramyahoo88/A_Glorious_Chance_solo).
+
+Cloudflare publication retains every previously published companion and download through the current production asset manifest. Cloudflare Pages uses direct uploads to the existing `solo-table` project; `_headers` preserves download filenames. Compare the latest production file manifest before preparing a new upload, so another release is retained.
 
 The Colonial Twilight companion’s **Saved games** controls move a game between browsers or between the hosted and offline copies. [Colonial Twilight source and build instructions](source/colonial-twilight/README.md)
 
